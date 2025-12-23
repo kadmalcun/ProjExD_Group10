@@ -128,6 +128,12 @@ class MapManager:
         except:
             self.base_img = None
 
+        try:
+            self.goal_img = pygame.image.load(os.path.join("fig", "TU.jpg")).convert_alpha()
+            self.goal_img = pygame.transform.scale(self.goal_img, (TILE_SIZE, TILE_SIZE))
+        except:
+            self.goal_img = None
+
     def draw(self, screen, is_fever=False):
         # 【担当E】is_feverフラグを受け取り、フィーバー中は背景色を変えてください
         if is_fever:
@@ -148,9 +154,11 @@ class MapManager:
                 pygame.draw.rect(screen, color, rect)
                 
                 # 【追加箇所】スポーンと拠点に画像を表示 (元のプログラム130行目付近)
-                if (tile == TILE_BASE or tile == TILE_SPAWN) and self.base_img:
+                if (tile == TILE_SPAWN) and self.base_img:
                     screen.blit(self.base_img, rect)
-                
+                if (tile == TILE_BASE) and self.goal_img:
+                    screen.blit(self.goal_img, rect)
+
                 pygame.draw.rect(screen, (0, 50, 0), rect, 1)
     
     def is_placeable(self, x, y):
@@ -460,8 +468,8 @@ def main():
                 is_elite = random.random() < 0.2
                 new_enemy = Koukaton(map_manager.waypoints, is_elite)
                 
-                new_enemy.hp += int(10 * difficulty_scale)
-                new_enemy.speed += (0.2 * difficulty_scale)
+                new_enemy.hp += int(30 * difficulty_scale)
+                new_enemy.speed += (0.6 * difficulty_scale)
                 enemy_group.add(new_enemy)
             
             enemy_group.update(gm)
